@@ -12,6 +12,7 @@ func main() {
 	//fmt.Println("Hello World")
 
 	files := os.Args[1:]
+	//dup1(files)
 	dup1(files)
 }
 
@@ -37,6 +38,31 @@ func dup1(files []string) {
 		stats[file] = c
 
 		f.Close()
+	}
+
+	printResults(stats)
+}
+
+// dup2 Find duplicate lines in given files -v2
+func dup2(files []string) {
+	stats := make(map[string]map[string]int)
+
+	for _, file := range files {
+		c := make(map[string]int)
+
+		bytes, err := os.ReadFile(file)
+
+		if err != nil {
+			continue
+		}
+
+		lines := strings.Split(string(bytes), "\n")
+
+		for _, line := range lines {
+			c[line]++
+		}
+
+		stats[file] = c
 	}
 
 	printResults(stats)
