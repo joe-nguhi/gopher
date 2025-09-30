@@ -10,6 +10,7 @@ import (
 	"log"
 	"math"
 	"math/rand"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -50,10 +51,11 @@ func main() {
 	//fmt.Println("Hello World")
 
 	//files := os.Args[1:]
-	////dup1(files)
+	//dup1(files)
 	//dup1(files)
 
-	file, err := os.Create("lissajous.gif")
+	//Lissajous Figures
+	/*file, err := os.Create("lissajous.gif")
 
 	if err != nil {
 		log.Fatalf("%v", err)
@@ -63,7 +65,39 @@ func main() {
 
 	//fmt.Printf("File: %v\n,", file)
 
-	lissajous(file)
+	lissajous(file)*/
+
+	// Fetch Url
+	links := os.Args[1:]
+
+	fetchUrls(links)
+}
+
+func fetchUrls(links []string) {
+	for _, link := range links {
+
+		response, err := http.Get(link)
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Fetch:%v\n", err)
+			os.Exit(1)
+		}
+
+		// Solution  1
+		/*bytes, err := io.ReadAll(response.Body)
+		response.Body.Close();
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "fecth: reading: %s, %v\n", link, err)
+			os.Exit(1)
+		}*/
+
+		//fmt.Printf("%s\n%s\n", link, bytes)
+
+		// Solution 2
+		fmt.Printf("%s:\n", link)
+		_, err = io.Copy(os.Stderr, response.Body)
+	}
 }
 
 func lissajous(out io.Writer) {
