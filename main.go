@@ -32,14 +32,14 @@ func main() {
 	*/
 
 	// Fetch Url
-	/*
-		links := os.Args[1:]
-		fetchUrls(links)
-	*/
+
+	links := os.Args[1:]
+	fetchUrls(links)
+
 }
 
 func fetchUrls(links []string) {
-	for _, link := range links {
+	for i, link := range links {
 
 		if !strings.HasPrefix(link, httpsScheme) {
 			link = fmt.Sprintf("%s%s", httpsScheme, link)
@@ -54,17 +54,34 @@ func fetchUrls(links []string) {
 
 		// Solution  1
 		/*bytes, err := io.ReadAll(response.Body)
-		response.Body.Close();
+		response.Body.Close()
 
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "fecth: reading: %s, %v\n", link, err)
 			os.Exit(1)
-		}*/
+		}
 
-		//fmt.Printf("%s\n%s\n", link, bytes)
+		//fmt.Printf("%d.%s\n%s\n", i, link, bytes)
+
+		file, err := os.Create(fmt.Sprintf("generated/link%d.html", i+1))
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Creating File: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Fprintf(file, string(bytes))*/
 
 		// Solution 2
 		fmt.Printf("Link: %s:\t Status:%s\n", link, response.Status)
-		_, err = io.Copy(os.Stderr, response.Body)
+
+		file, err := os.Create(fmt.Sprintf("generated/link%d.html", i+1))
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Creating File: %v\n", err)
+			os.Exit(1)
+		}
+
+		_, err = io.Copy(file, response.Body)
 	}
 }
