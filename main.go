@@ -29,6 +29,6 @@ func main() {
 
 	// Fetch Url
 	links := os.Args[1:]
-	//fetch.SequentialFetch(links)
+	fetch.SequentialFetch(links)
 	fetch.ParallelFetch(links)
 }

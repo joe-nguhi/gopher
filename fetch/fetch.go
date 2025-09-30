@@ -13,7 +13,10 @@ const httpsScheme = "https://"
 
 // SequentialFetch fetches URLs sequentially and saves them to files
 func SequentialFetch(links []string) {
+	start := time.Now()
+
 	for i, link := range links {
+		nstart := time.Now()
 		if !strings.HasPrefix(link, httpsScheme) {
 			link = fmt.Sprintf("%s%s", httpsScheme, link)
 		}
@@ -25,18 +28,23 @@ func SequentialFetch(links []string) {
 			os.Exit(1)
 		}
 
-		fmt.Printf("Link: %s:\t Status:%s\n", link, response.Status)
-
 		file, err := os.Create(fmt.Sprintf("generated/link%d.html", i+1))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Creating File: %v\n", err)
 			os.Exit(1)
 		}
 
-		_, err = io.Copy(file, response.Body)
+		nbytes, err := io.Copy(file, response.Body)
+
+		secs := time.Since(nstart).Seconds()
+
+		fmt.Printf("%.2fs %7d %s \t %s \n", secs, nbytes, link, response.Status)
+
 		response.Body.Close()
 		file.Close()
 	}
+
+	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
 }
 
 func ParallelFetch(links []string) {
@@ -81,6 +89,6 @@ func fetchUrl(link string, ch chan string, index int) {
 
 	secs := time.Since(start).Seconds()
 
-	ch <- fmt.Sprintf("%.2fs %7d %s", secs, nbytes, link)
+	ch <- fmt.Sprintf("%.2fs %7d %s \t %s", secs, nbytes, link, response.Status)
 
 }
