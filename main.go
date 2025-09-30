@@ -1,8 +1,9 @@
 package main
 
 import (
-	"nguhi.dev/gopher/fetch"
 	"os"
+
+	"nguhi.dev/gopher/fetch"
 )
 
 // Learning Go K&D Book
@@ -28,5 +29,6 @@ func main() {
 
 	// Fetch Url
 	links := os.Args[1:]
-	fetch.SequentialFetch(links)
+	//fetch.SequentialFetch(links)
+	fetch.ParallelFetch(links)
 }
