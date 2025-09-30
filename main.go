@@ -46,6 +46,8 @@ const (
 	blackIndex = 1 // next color in palette
 )
 
+const httpsScheme = "https://"
+
 // Learning Go K&D Book
 func main() {
 	//fmt.Println("Hello World")
@@ -76,6 +78,10 @@ func main() {
 func fetchUrls(links []string) {
 	for _, link := range links {
 
+		if !strings.HasPrefix(link, httpsScheme) {
+			link = fmt.Sprintf("%s%s", httpsScheme, link)
+		}
+
 		response, err := http.Get(link)
 
 		if err != nil {
@@ -95,7 +101,7 @@ func fetchUrls(links []string) {
 		//fmt.Printf("%s\n%s\n", link, bytes)
 
 		// Solution 2
-		fmt.Printf("%s:\n", link)
+		fmt.Printf("Link: %s:\t Status:%s\n", link, response.Status)
 		_, err = io.Copy(os.Stderr, response.Body)
 	}
 }
