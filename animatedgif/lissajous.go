@@ -42,9 +42,15 @@ const (
 	blackIndex = 1 // next color in palette
 )
 
-func Lissajous(out io.Writer) {
+func Lissajous(out io.Writer, c *int) {
+	var cycles = 5.0
+
+	if c != nil {
+		cycles = float64(*c)
+	}
+
 	const (
-		cycles  = 5     // number of complete x oscillator revolutions
+		//cycles = 5// number of complete x oscillator revolutions
 		res     = 0.005 // angular resolution
 		size    = 200   // image canvas covers [-size..+size]
 		nframes = 64    // number of animation frames

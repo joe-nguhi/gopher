@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
+
+	"nguhi.dev/gopher/animatedgif"
 )
 
 // Learning Go K&D Book
@@ -40,6 +43,26 @@ func main() {
 
 	// Simple Web Server
 	http.HandleFunc("/", handler)
+
+	http.HandleFunc("/cool", func(w http.ResponseWriter, r *http.Request) {
+
+		err := r.ParseForm()
+		if err != nil {
+			log.Print(err)
+		}
+
+		var c *int
+
+		for k, v := range r.Form {
+
+			if k == "cycles" {
+				cycles, _ := strconv.Atoi(v[0])
+				c = &cycles
+			}
+		}
+
+		animatedgif.Lissajous(w, c)
+	})
 	http.HandleFunc("/count", counter)
 
 	port := "8080"
