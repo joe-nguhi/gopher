@@ -1,5 +1,11 @@
 package main
 
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
 // Learning Go K&D Book
 func main() {
 
@@ -26,4 +32,16 @@ func main() {
 		fetch.SequentialFetch(links)
 		fetch.ParallelFetch(links)
 	*/
+
+	// Simple Web Server
+	http.HandleFunc("/", handler)
+	port := "8080"
+	fmt.Printf("Starting server on port %s\n", port)
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("localhost:%s", port), nil))
+
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Request Path: %s\n", r.URL.Path)
 }
