@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"strconv"
+	"os"
 	"sync"
 
-	"nguhi.dev/gopher/animatedgif"
+	"nguhi.dev/gopher/idiomatic"
 )
 
 // Learning Go K&D Book
@@ -42,32 +41,43 @@ func main() {
 	*/
 
 	// Simple Web Server
-	http.HandleFunc("/", handler)
+	/*
+		http.HandleFunc("/", handler)
 
-	http.HandleFunc("/cool", func(w http.ResponseWriter, r *http.Request) {
+		http.HandleFunc("/cool", func(w http.ResponseWriter, r *http.Request) {
 
-		err := r.ParseForm()
-		if err != nil {
-			log.Print(err)
-		}
-
-		var c *int
-
-		for k, v := range r.Form {
-
-			if k == "cycles" {
-				cycles, _ := strconv.Atoi(v[0])
-				c = &cycles
+			err := r.ParseForm()
+			if err != nil {
+				log.Print(err)
 			}
-		}
 
-		animatedgif.Lissajous(w, c)
-	})
-	http.HandleFunc("/count", counter)
+			var c *int
 
-	port := "8080"
-	fmt.Printf("Starting server on port %s\n", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("localhost:%s", port), nil))
+			for k, v := range r.Form {
+
+				if k == "cycles" {
+					cycles, _ := strconv.Atoi(v[0])
+					c = &cycles
+				}
+			}
+
+			animatedgif.Lissajous(w, c)
+		})
+
+		http.HandleFunc("/count", counter)
+
+		port := "8080"
+		fmt.Printf("Starting server on port %s\n", port)
+		log.Fatal(http.ListenAndServe(fmt.Sprintf("localhost:%s", port), nil))
+	*/
+
+	s, err := idiomatic.Join(os.Args[1], os.Args[2], 10)
+	if err != nil {
+		fmt.Fprintf(os.Stdout, "%s\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("%s", s)
 
 }
 
