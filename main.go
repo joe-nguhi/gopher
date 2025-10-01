@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 )
 
 // Learning Go K&D Book
+
+var mu sync.Mutex
+var count int
+
 func main() {
 
 	// find duplicates
@@ -35,13 +40,23 @@ func main() {
 
 	// Simple Web Server
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/count", counter)
+
 	port := "8080"
 	fmt.Printf("Starting server on port %s\n", port)
-
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("localhost:%s", port), nil))
 
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Request Path: %s\n", r.URL.Path)
+	mu.Lock()
+	count++
+	mu.Unlock()
+}
+
+func counter(w http.ResponseWriter, r *http.Request) {
+	mu.Lock()
+	fmt.Fprintf(w, "Count: %d", count)
+	mu.Unlock()
 }
